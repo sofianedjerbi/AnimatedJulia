@@ -57,3 +57,4 @@ pub fn print_julia(image: &mut RgbImage, a: f32, b:f32) {
         }
     }
 }
+

@@ -50,3 +50,4 @@ fn main() {
     let now = Instant::now(); // Finish benchmark and print
     println!("Done ({:?})", now.duration_since(before));
 }
+

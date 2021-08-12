@@ -23,3 +23,4 @@ pub fn get_coefficient(a: f32, b:f32, x: f32, y:f32) -> u32 {
     }
     return i
 }
+
