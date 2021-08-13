@@ -24,7 +24,7 @@ fn mandelbrot_display() {
     // New image
     let mut img = RgbImage::new(WIDTH, HEIGHT);
 
-    print_mandelbrot(&mut img, -1.0, 0.0); // Print julia fractal on img
+    print_mandelbrot(&mut img, -0.5, 0.0, 4.0); // Print julia fractal on img
 
     println!("Saving Mandelbrot."); // Save
     match img.save("mandelbrot.png") {

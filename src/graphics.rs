@@ -61,9 +61,10 @@ fn get_mandelbrot_color(x: f32, y: f32) -> Rgb<u8> {
 /// * `j` - Pixel position on ordinate axis
 /// * `w` - Width of the screen
 /// * `h` - Height of the screen
-fn convert_coord(i: u32, j: u32, w: f32, h: f32) -> (f32, f32) {
-    return (ZOOM * ((i as f32) - w/2.0)/w,
-           (ZOOM/w) * ((j as f32) - h/2.0))
+/// * `zoom` - Zoom level (mathematical equivalent of 1080)
+fn convert_coord(i: u32, j: u32, w: f32, h: f32, zoom: f32) -> (f32, f32) {
+    return (zoom * ((i as f32) - w/2.0)/w,
+           (zoom/w) * ((j as f32) - h/2.0))
 }
 
 /// Set every Julia pixel of a mutable image
@@ -78,7 +79,7 @@ pub fn print_julia(image: &mut RgbImage, a: f32, b:f32) {
     let h = HEIGHT as f32; // float for computations
     for i in 0..WIDTH {
         for j in 0..HEIGHT {
-            let (x, y) = convert_coord(i, j, w, h);
+            let (x, y) = convert_coord(i, j, w, h, ZOOM);
             image.put_pixel(i, j, get_color(a, b, x, y));
         }
     }
@@ -97,7 +98,7 @@ pub fn print_julia_polar(image: &mut RgbImage, a: f32, b:f32) {
     let h = HEIGHT as f32; // float for computations
     for i in 0..WIDTH {
         for j in 0..HEIGHT {
-            let (x, y) = convert_coord(i, j, w, h);
+            let (x, y) = convert_coord(i, j, w, h, ZOOM);
             image.put_pixel(i, j, get_color(a, b, x, y));
         }
     }
@@ -111,12 +112,12 @@ pub fn print_julia_polar(image: &mut RgbImage, a: f32, b:f32) {
 /// * `image` - A mutable image container for Image cargo
 /// * `a` - Absciss position of the center point
 /// * `b` - Ordinal position of the center point
-pub fn print_mandelbrot(image: &mut RgbImage, a: f32, b: f32) {
+pub fn print_mandelbrot(image: &mut RgbImage, a: f32, b: f32, zoom: f32) {
     let w = WIDTH as f32;  // Convert width and height to
     let h = HEIGHT as f32; // float for computations
     for i in 0..WIDTH {
         for j in 0..HEIGHT {
-            let (x, y) = convert_coord(i, j, w, h);
+            let (x, y) = convert_coord(i, j, w, h, zoom);
             image.put_pixel(i, j, get_mandelbrot_color(x+a, y+b));
         }
     }
