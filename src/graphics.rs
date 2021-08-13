@@ -85,26 +85,6 @@ pub fn print_julia(image: &mut RgbImage, a: f32, b:f32) {
     }
 }
 
-
-/// Set every Julia pixel of a mutable image with polar constant
-///
-/// # Arguments
-///
-/// * `image` - A mutable image container for Image cargo
-/// * `a` - Norm of the constant
-/// * `b` - Argument of the constant
-pub fn print_julia_polar(image: &mut RgbImage, a: f32, b:f32) {
-    let w = WIDTH as f32;  // Convert width and height to
-    let h = HEIGHT as f32; // float for computations
-    for i in 0..WIDTH {
-        for j in 0..HEIGHT {
-            let (x, y) = convert_coord(i, j, w, h, ZOOM);
-            image.put_pixel(i, j, get_color(a, b, x, y));
-        }
-    }
-}
-
-
 /// Set every Mandelbrot pixel of a mutable image
 ///
 /// # Arguments
