@@ -1,11 +1,14 @@
 use image::{Rgb, RgbImage};
 use palette::{Hsv, Srgb, FromColor};
 
-use crate::julia::{MAX_ITER, get_coefficient};
+use crate::algo::{MAX_ITER, 
+                  get_coefficient, 
+                  get_mandelbrot_coefficient};
 
 
 pub const WIDTH: u32 = 1920;  // Width of the screen
 pub const HEIGHT: u32 = 1080; // Height of the screen
+const ZOOM: f32 = 4.5;    // Mathematical width 
 
 
 /// Return the RGB color equivalent of the HSV color
@@ -36,8 +39,32 @@ fn get_color(a: f32, b: f32, x: f32, y: f32) -> Rgb<u8> {
     return hsv_to_rgb(hsv)
 }
 
+/// Return the Rgb Mandelbrot color for a given point
 ///
-//fn convert_coord(i: u16, j: u16) -> {
+/// # Arguments
+///
+/// * `x` - Real part of the point
+/// * `y` - Imaginary part of the point
+fn get_mandelbrot_color(x: f32, y: f32) -> Rgb<u8> {
+    let m: f32 = MAX_ITER as f32;
+    let i: f32 = get_mandelbrot_coefficient(x, y) as f32;
+    let hsv: Hsv = Hsv::new(360.0 * i/m, 1.0,
+                            if i == m {0.0} else {1.0});
+    return hsv_to_rgb(hsv)
+}
+
+/// Convert pixel coords into mathematical coords
+///
+/// # Arguments
+///
+/// * `i` - Pixel position on absciss axis
+/// * `j` - Pixel position on ordinate axis
+/// * `w` - Width of the screen
+/// * `h` - Height of the screen
+fn convert_coord(i: u32, j: u32, w: f32, h: f32) -> (f32, f32) {
+    return (ZOOM * ((i as f32) - w/2.0)/w,
+           (ZOOM/w) * ((j as f32) - h/2.0))
+}
 
 /// Set every Julia pixel of a mutable image
 ///
@@ -51,9 +78,46 @@ pub fn print_julia(image: &mut RgbImage, a: f32, b:f32) {
     let h = HEIGHT as f32; // float for computations
     for i in 0..WIDTH {
         for j in 0..HEIGHT {
-            let x = 4.0 * ((i as f32) - w/2.0)/w;         // + px
-            let y = (4.0/w) * ((j as f32) - h/2.0);     // + py
+            let (x, y) = convert_coord(i, j, w, h);
             image.put_pixel(i, j, get_color(a, b, x, y));
+        }
+    }
+}
+
+
+/// Set every Julia pixel of a mutable image with polar constant
+///
+/// # Arguments
+///
+/// * `image` - A mutable image container for Image cargo
+/// * `a` - Norm of the constant
+/// * `b` - Argument of the constant
+pub fn print_julia_polar(image: &mut RgbImage, a: f32, b:f32) {
+    let w = WIDTH as f32;  // Convert width and height to
+    let h = HEIGHT as f32; // float for computations
+    for i in 0..WIDTH {
+        for j in 0..HEIGHT {
+            let (x, y) = convert_coord(i, j, w, h);
+            image.put_pixel(i, j, get_color(a, b, x, y));
+        }
+    }
+}
+
+
+/// Set every Mandelbrot pixel of a mutable image
+///
+/// # Arguments
+///
+/// * `image` - A mutable image container for Image cargo
+/// * `a` - Absciss position of the center point
+/// * `b` - Ordinal position of the center point
+pub fn print_mandelbrot(image: &mut RgbImage, a: f32, b: f32) {
+    let w = WIDTH as f32;  // Convert width and height to
+    let h = HEIGHT as f32; // float for computations
+    for i in 0..WIDTH {
+        for j in 0..HEIGHT {
+            let (x, y) = convert_coord(i, j, w, h);
+            image.put_pixel(i, j, get_mandelbrot_color(x+a, y+b));
         }
     }
 }
