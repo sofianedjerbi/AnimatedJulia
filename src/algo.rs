@@ -1,8 +1,8 @@
 use num_complex::Complex;
 
 
-pub const MAX_ITER: u32 = 255; // Max iteration for the coefficient
-const MAX_NORM: f32 = 4.0;     // Max norm
+pub const MAX_ITER: u32 = 100; // Max iteration for the coefficient
+const MAX_NORM: f32 = 4.0;      // Max norm
 
 
 /// Return the Julia coefficient of a given point with a given coefficient
