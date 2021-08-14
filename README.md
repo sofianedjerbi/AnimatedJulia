@@ -1,6 +1,7 @@
 # Animated-Julia
-Animated Julia set written in Rust  
-[![example video](https://img.youtube.com/vi/GRp3HAUCKk8/0.jpg)](https://www.youtube.com/watch?v=GRp3HAUCKk8)
+Animated Julia set written in Rust.  
+[Click here for demo:  
+![example video](https://img.youtube.com/vi/GRp3HAUCKk8/0.jpg)](https://www.youtube.com/watch?v=GRp3HAUCKk8)
 ## Usage
 
 ```
