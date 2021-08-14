@@ -1,5 +1,5 @@
 # Animated-Julia
-Animated Julia set written in Rust
+Animated Julia set written in Rust  
 [![example video](https://img.youtube.com/vi/GRp3HAUCKk8/0.jpg)](https://www.youtube.com/watch?v=GRp3HAUCKk8)
 ## Usage
 
