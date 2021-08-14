@@ -1,7 +1,7 @@
 # Animated-Julia
 Animated Julia set (GIF) written in Rust
 ![example image](example.png)
-![example video](example.mp4)
+[![example video](https://img.youtube.com/vi/GRp3HAUCKk8/0.jpg)](https://www.youtube.com/watch?v=GRp3HAUCKk8)
 ## Usage
 
 ```
