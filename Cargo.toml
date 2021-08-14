@@ -7,6 +7,8 @@ edition = "2018"
 num-complex = "0.4"
 image = "0.23.14"
 palette = "0.6"
+libm = "0.2.1"
+rayon = "1.5.1"
 
 [profile.dev]
 opt-level = 0
