@@ -1,7 +1,9 @@
 mod algo;
 mod graphics;
 
-use image::{RgbImage};
+use libm::tanh;
+use image::RgbImage;
+use rayon::prelude::*;
 
 use crate::graphics::{WIDTH, HEIGHT,
                       print_julia,
@@ -12,15 +14,16 @@ use std::time::Instant;
 use std::{env, fs};
 
 
-const ITER: u16 = 1200; // Frames for the julia animation  
+const ITER_ROTATION: u16 = 1200; // Frames for the julia animation  
+const ITER_ZOOM: u16 = 3600; // Frames for mandelbrot zoom (1 min)
 
 fn print_help() {
     println!("Usage: julia [MODE]");
     println!("Modes:");
-    println!("    \"-jd\": Display a simple Julia fractal");
-    println!("    \"-jr\": Render a Julia rotation GIF //TODO");
+    println!("    \"-jd <re(c)> <im(c)>\": Display a simple Julia fractal");
+    println!("    \"-jr <norm(c)>\": Render a Julia rotation GIF");
     println!("    \"-md\": Display the Mandelbrot fractal");
-    println!("    \"-mz\": Zoom on the Mandelbrot fractal //TODO");
+    println!("    \"-mz <re(c)> <im(c)>\": Zoom on the Mandelbrot fractal");
 }
 
 fn mandelbrot_display() {
@@ -38,30 +41,28 @@ fn mandelbrot_display() {
 
 fn mandelbrot_zoom(a: f32, b: f32) {
     println!("We're zooming.\nPress CTRL + C to stop.");
-    let mut zoom: f32 = 5.0-4.469;
-    loop {
+    
+    (0..ITER_ZOOM).into_par_iter().for_each(|i| {
+        let zoom = 5.0 * (1.0 - tanh((i as f64)*0.001)) as f32;
         let mut img = RgbImage::new(WIDTH, HEIGHT);
         print_mandelbrot(&mut img, a, b, zoom); // Print fractal on img
 
-        match img.save(format!("./render.tmp/{}.png", 5.0-zoom)) {
+        match img.save(format!("./render/{}.png", i)) {
             Ok(s) => s,
             Err(e) => panic!("Cannot save fractal.\n{:?}", e)
         };
-
-        zoom = zoom - 0.001
-    }
+    });
 }
 
-fn julia_rotation(a: f32, b: f32) {
+fn julia_rotation(a: f32) {
     println!("Starting render...");
     // Convert to carthesian coordinates
-    let mut m: f32 = b; // Module
-    for i in 0..ITER {
+    (0..ITER_ROTATION).into_par_iter().for_each(|i| {
+        let m: f32 = (i as f32) * 2.0 * PI/(ITER_ROTATION as f32); // Angle
         let x: f32 = f32::cos(m) * a;
         let y: f32 = f32::sin(m) * a;
-        julia_display(x, y, &format!("./render.tmp/{}.png", i));
-        m = (i as f32) * 2.0 * PI/(ITER as f32); // New angle
-    }
+        julia_display(x, y, &format!("./render/{}.png", i));
+    });
 }
 
 fn julia_display(a: f32, b: f32, name: &str) {
@@ -80,13 +81,14 @@ fn julia_display(a: f32, b: f32, name: &str) {
 fn main() {
     // Parse arguments
     let args: Vec<String> = env::args().collect();
-    if args.len() != 4 && (args.len() != 2 || args[1] != "-md") {
+    
+    if args.len() < 2 { // If no mode
         print_help();
         return
     }
     
     // Create directory
-    match fs::create_dir_all("./render.tmp/") {
+    match fs::create_dir_all("./render/") {
         Ok(s) => s,
         Err(e) => panic!("Cannot create render directory here.\n{:?}", e)
     };
@@ -98,22 +100,18 @@ fn main() {
     let before = Instant::now();
     println!("Computing...");
     
-    if mode == "-md" {              // Mandelbrot
+    if mode == "-md" { // Mandelbrot
         mandelbrot_display();
     }
-    else if mode == "-jr" {         // Julia rotation
-        // Grabbing norm and module
+    else if mode == "-jr" { // Julia rotation
+        // Grabbing norm
         let a: f32 = match args[2].parse::<f32>() {
             Ok(s) => s,
             Err(e) => panic!("Invalid argument [REAL PART].\n{:?}", e)
         };
-        let b: f32 = match args[3].parse::<f32>() {
-            Ok(s) => s,
-            Err(e) => panic!("Invalid argument [IMAGINARY PART].\n{:?}", e)
-        };
-        julia_rotation(a, b);
+        julia_rotation(a);
     }
-    else if mode == "-jd" {         // Julia
+    else if mode == "-jd" { // Julia
         // Grabbing real and imaginary part
         let a: f32 = match args[2].parse::<f32>() {
             Ok(s) => s,
@@ -125,8 +123,8 @@ fn main() {
         };
         julia_display(a, b, "julia.png");
     }
-    else if mode == "-mz" {         // Mandelbrot zoom
-        // Grabbing center
+    else if mode == "-mz" { // Mandelbrot zoom
+        // Grabbing center point
         let a: f32 = match args[2].parse::<f32>() {
             Ok(s) => s,
             Err(e) => panic!("Invalid argument [REAL PART].\n{:?}", e)
