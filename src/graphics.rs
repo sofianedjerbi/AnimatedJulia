@@ -53,21 +53,6 @@ fn get_mandelbrot_color(x: f32, y: f32) -> Rgb<u8> {
     return hsv_to_rgb(hsv)
 }
 
-/// Return the Rgb Mandelbrot color for a given point
-/// With historigram support
-///
-/// # Arguments
-///
-/// * `x` - Real part of the point
-/// * `y` - Imaginary part of the point
-fn get_mandelbrot_color_hist(x: f32, y: f32) -> Rgb(u8) {
-    let m: f32 = MAX_ITER as f32;
-    let i: f32 = get_mandelbrot_coefficient(x, y);
-    let mut h // Historigram
-    if i < MAX_ITER {}
-}
-
-
 /// Convert pixel coords into mathematical coords
 ///
 /// # Arguments
