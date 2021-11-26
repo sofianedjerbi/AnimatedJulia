@@ -21,9 +21,7 @@ fn print_help() {
     println!("Usage: julia [MODE]");
     println!("Modes:");
     println!("    \"-jd <re(c)> <im(c)>\": Display a simple Julia fractal");
-    println!("    \"-jr <norm(c)>\": Render a Julia rotation GIF");
-    println!("    \"-md\": Display the Mandelbrot fractal");
-    println!("    \"-mz <re(c)> <im(c)>\": Zoom on the Mandelbrot fractal");
+    println!("    \"-jr <norm(c)>\": Render Julia rotation frames");
 }
 
 fn mandelbrot_display() {
@@ -100,10 +98,10 @@ fn main() {
     let before = Instant::now();
     println!("Computing...");
     
-    if mode == "-md" { // Mandelbrot
+    /*if mode == "-md" { // Mandelbrot
         mandelbrot_display();
-    }
-    else if mode == "-jr" { // Julia rotation
+    }*/
+    if mode == "-jr" { // Julia rotation
         // Grabbing norm
         let a: f32 = match args[2].parse::<f32>() {
             Ok(s) => s,
@@ -123,6 +121,7 @@ fn main() {
         };
         julia_display(a, b, "julia.png");
     }
+    /*
     else if mode == "-mz" { // Mandelbrot zoom
         // Grabbing center point
         let a: f32 = match args[2].parse::<f32>() {
@@ -134,7 +133,7 @@ fn main() {
             Err(e) => panic!("Invalid argument [IMAGINARY PART].\n{:?}", e)
         };
         mandelbrot_zoom(a, b);
-    }
+    }*/
     else {
         print_help();
         return

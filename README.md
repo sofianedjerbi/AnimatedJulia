@@ -8,9 +8,7 @@ A parallel Rust solution for animating Julia set.
 Usage: julia [MODE]
 Modes:
     "-jd <re(c)> <im(c)>": Display a simple Julia fractal
-    "-jr <norm(c)>": Render a Julia rotation GIF
-    "-md": Display the Mandelbrot fractal
-    "-mz <re(c)> <im(c)>": Zoom on the Mandelbrot fractal
+    "-jr <norm(c)>": Render Julia rotations frames
 ```
 This program will output every frame into `./render`.  
 You'll need `ffmpeg` to turn this into a GIF/Video.
