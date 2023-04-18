@@ -2,6 +2,8 @@
 A parallel Rust solution for animating Julia sets.  
 [Click here for demo:  
 ![example video](https://img.youtube.com/vi/GRp3HAUCKk8/0.jpg)](https://www.youtube.com/watch?v=GRp3HAUCKk8)
+
+Looking for a live/interactive GLSL demo ? [Click here!](https://www.shadertoy.com/view/slSBDm)
 ## Usage
 
 ```
